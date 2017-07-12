@@ -11,5 +11,11 @@ GLKBaseEffect会在需要的时候自动的构建 GPU 程序
 
 
 #GLKVector3
+GLKVector3是一个包含了x,y,z的位置的结构体
+#GLKVector2
+GLKVector2是一个包含了纹理坐标的结构体
+#GLKTextureInfo
+GLKTextureInfo类封装了与纹理缓存的相关的信息，包括尺寸以及是否包含 MIP贴图。
+
 #EAGLContext
 EAGLContext 封装一个特定于某个平台的 OpenGL ES 上下文 
