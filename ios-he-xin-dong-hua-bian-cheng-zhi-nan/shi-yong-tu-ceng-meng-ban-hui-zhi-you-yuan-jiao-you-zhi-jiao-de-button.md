@@ -1,10 +1,10 @@
 #使用图层蒙版绘制有圆角有直角的 button
-##1. UIBezierPath和CAShapeLayer类
+##1. UIBezierPath和CAShapeLayer类 （这里只是简单介绍）
 ###1.1 CAShapeLayer
 `CAShapeLayer`是一个通过矢量图形而不是bitmap来绘制的图层子类。你指定诸如颜色和线宽等属性，用CGPath来定义想要绘制的图形，最后`CAShapeLayer`就自动渲染出来了。
 
 `CAShapeLayer`可以用来绘制所有能够通过CGPath来表示的形状。这个形状不一定要闭合，图层路径也不一定要不可破，事实上你可以在一个图层上绘制好几个不同的形状。你可以控制一些属性比如lineWith（线宽，用点表示单位），lineCap（线条结尾的样子），和lineJoin（线条之间的结合点的样子）。
-###1.2 UIBezierPath类
+###1.2 UIBezierPath(贝瑟尔曲线)
 `UIBezierPath`对象是`CGPathRef`数据类型的封装。path如果是基于矢量形状的，都用直线和曲线段去创建。我们使用直线段去创建矩形和多边形，使用曲线段去创建弧（arc），圆或者其他复杂的曲线形状。每一段都包括一个或者多个点，绘图命令定义如何去诠释这些点。**每一个直线段或者曲线段的结束的地方是下一个的开始的地方。**每一个连接的直线或者曲线段的集合成为subpath。一个UIBezierPath对象定义一个完整的路径包括一个或者多个subpaths。
    创建和使用一个path对象的过程是分开的。创建path是第一步，包含一下步骤：
 （1）创建一个Bezier path对象。
@@ -34,7 +34,7 @@ UIButton *button1 = [UIButton buttonWithType:(UIButtonTypeSystem)];
     button1.backgroundColor = [UIColor redColor];
     
     [self.view addSubview:button1];
-    CGSize radii = CGSizeMake(5, 5);
+    CGSize radii = CGSizeMake(8, 8);
     // 控制哪个角为圆角
     UIRectCorner corners = UIRectCornerTopRight | UIRectCornerTopLeft;
     //create path

@@ -1,0 +1,3 @@
+#CATextLayer
+文字图层
+`CATextLayer`以图层的形式包含了UILabel几乎所有的绘制特性，并且额外提供了一些新的特性。
