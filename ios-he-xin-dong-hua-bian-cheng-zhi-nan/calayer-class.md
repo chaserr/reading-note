@@ -35,6 +35,8 @@ contentsRect属性允许我们在图层边框里显示寄宿图的一个子域�
 ### contentsCenter属性
 `contentsCenter`其实是一个CGRect，它定义了一个固定的边框和一个在图层上可拉伸的区域。 改变contentsCenter的值并不会影响到寄宿图的显示，除非这个图层的大小改变了，你才看得到效果。
 
+### shouldRasterize属性
+shouldRasterize如果它被设置为YES，在应用透明度之前，图层及其子图层都会被整合成一个整体的图片，这样就没有透明度混合的问题了
 
 ##事件响应
--containsPoint:和-hitTest:。
+`-containsPoint:`和`-hitTest:`。
