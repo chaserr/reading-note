@@ -222,6 +222,7 @@ for (int i=0;i<10000;i++){
 ##52. b别忘了 nstimer 会保留其目标对象
 1. 反复执行任务的计时器很容易引入保留环，如果这种计时器的目标又保留了计时器本身，那么肯定导致循环引用
 2. 可以扩充 NSTimer 的功能，用 block 来打破循环引用。
+
 ```c
 @interface NSTimer (timerBlock)
 
@@ -230,7 +231,9 @@ for (int i=0;i<10000;i++){
                                        repeats:(BOOL)repeats;
 
 @end
+```
 
+```c
 @implementation NSTimer (timerBlock)
 
 + (NSTimer *)scheduledTimerWithTimeInterval:(NSTimeInterval)interval block:(void (^)())block repeats:(BOOL)repeats {
