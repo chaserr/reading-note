@@ -129,7 +129,78 @@ static void *AssociationKey = @"AssocianKey";
 
  ##11. 理解 objc_msgSend的作用
  ##12. 理解消息转发机制
- 
-  
+ > 见 iOS知识积累1.6章 `runtime`
 
+在对象无法解读消息后，首先将调用其所属类的下列方法`+(BOOL)resolveInstanceMethod:(SEL)selector`其返回值为 Boolean 类型，表示这个类能否新增一个实例方法用以处理此 selector，加入尚未实现的方式不是实例方法二十类方法，那么会调用另外一个方法`resolveClassMethod`。
+使用这种方法的前提是，相关方法的实现代码已经写好，只等着运行的时候动态插在类里面就可以，此方案常用来实现@dynamic属性。
+```c
++ (BOOL)resolveInstanceMethod:(SEL)selector{
+    NSString *selectorString = NSStringFromSelector(selector);
+    if(/*selector is from a @dynamic property*/){
+        if([selectorString hasPrfix:@"set"]){
+            class_method(self,selector,(IMP)autoDictionarySetter,@"v@:@");
+        }else{
+            class_method(self,selector,(IMP)autoDictionaryGetter,@"@@:");
+        }
+        return YES;
+    }
+    return [super resolveInstanceMethod:selector];
+}
 
+id autoDictionaryGetter(id self,SEL _cmd){
+    
+}
+
+void autoDictionarySetter(id self,SEL _cmd, id value){
+    
+}
+```
+首先将选择子化为字符串，然后检测其是否表示设置方法，若前缀为 set, 则表示设置方法，否则即使获取方法，不管哪种情况，都会把处理理该选择子的方法加到当前类里面，所添加的方法是用纯 C 函数实现。
+
+消息转发流程
+
+![](/assets/B8C0FB39-6DCC-4ABF-8F39-5DEAD11D9A0F.png)
+
+要点：
+1. 若对象无法响应某个选择子，则进入消息转发流程
+2. 通过运行期的动态方法解析功能，可以在需要用到某个方法时再将其加入类中。
+3. 对象可以把其无法解读的某些选择子转交给其他的对象来处理
+4. 经过上述两步之后，如果还没有办法处理选择子，那就启动完整的消息转发机制。
+
+##13. 用‘方法调配技术(metho swizzling)’调试‘黑盒方法’
+##14. 理解‘类对象’的用意
+##15. 用前缀避免命名空间冲突 
+##16. 提供‘全能初始化方法’（便利构造器）
+##17. 是写 description 方法
+##18. 尽量使用不可变对象
+##19. 使用清晰而协调的命名方式
+##20. 为私有方法名加前缀
+##21. 理解objective-c错误模型
+##22. 理解 NSCopying 协议
+1. 浅拷贝：指针拷贝，指向统一内存地址；深拷贝：值拷贝，指向不同内存地址，需要为拷贝的值再分配一份内存来存放
+##23. 通过委托与数据源协议进行对象间通信
+1、 若有必要，可实现含有位段的结构体，将委托对象是否能响应相关协议方法这一信息缓存在其中
+##24. 将类的实现代码分散到便于管理的数个分类之中。
+##25. 总是为第三方类的分类名称添加前缀
+##26. 不要在分类中声明属性
+##27. 使用分类隐藏实现细节
+##28. 听过协议提供匿名对象
+##29. 理解引用计数
+##30. 以 ARC 简化引用计数
+##31. 在dealloc 方法中只释放引用并解除监听
+##32. 编写‘异常安全代码’时留意内存管理问题
+##33. 以弱引用避免保留环
+##34. 以‘自动释放池块’降低内存峰值
+1. 一般用在循环引用内部
+i.e.：
+```c
+for (int i=0;i<10000;i++){
+    @autoreleasepool {
+       [self doSomething];
+    }
+}
+```
+##35. 用僵尸对象调试内存管理问题
+##36. 不要使用 retainCount
+##37. 理解‘block’ 这一概念
+1. block 类似于y
