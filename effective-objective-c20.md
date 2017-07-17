@@ -46,3 +46,90 @@ static const NSTimeInterval kAnimationDuration = 0.3;
 3. 有时候会使用懒加载初始化技术，这时候应该通过属性来读取数据。
 
 ##8. 理解“对象等同性”这一概念
+判断两个NSObject对象是否相等要覆写`isEqual`和`hash`方法：
+```c
+- (BOOL)isEqual:(id)object{
+
+    if (self == object) return YES;
+    if ([self class] != [object class]) return NO;
+    // 判断每个属性是否相等
+    SomeClass *class = (SomeClass *)object;
+    if (![class.property1 isEqualToString: object.property1]) {
+        return NO;
+    }else if (![class.property2 isEqualToString: object.property2]){
+    
+        return NO;
+    }else if (/*...*/){
+//        ...
+    }
+    return YES;
+}
+
+- (NSUInteger)hash{
+
+    NSUInteger property1Hash = [property1 hash];
+    NSUInteger property2Hash = [property2 hash];
+//    ...
+    return property1Hash^property2Hash^//...
+}
+```
+
+要点：
+1. 若要检测对象的等同性，要提供`isEqual`和`hash`方法。
+2. 相同的对象必须具有相同的哈希码，但是两个哈希码相同的对象却未必相同。
+3. 不要盲目的逐个检测每条属性。
+4. 编写 hash方法的时候，应该使用计算速度快而且哈希吗碰撞几率低的算法。
+
+##9. 以‘类族模式’隐藏实现细节
+##10. 在即有类中使用关联对象存放自定义数据
+|    关联类型   |等效的@property属性|
+|:-----------------------:|:----:|
+|`OBJC_ASSOCIATION_ASSIGN`|assign|
+|`OBJC_ASSOCIATION_RETAIN_NONATOMIC`|assign|
+|`OBJC_ASSOCIATION_COPY_NONATOMIC`|assign|
+|`OBJC_ASSOCIATION_RETAIN`|assign|
+|`OBJC_ASSOCIATION_COPY`|assign|
+
+
+使用i.e.:
+1. 使用运行时给分类添加属性
+2. 想在一个类中处理多个 alertview属性。可以给某个alertview绑定一个与之关联的‘block’。
+```c
+#import<objc/runtime>
+static void *AssociationKey = @"AssocianKey";
+
+- (void)showAlert
+{
+    void (^block)(NSInteger) = ^(NSInteger buttonIndex){
+    
+        if (buttonIndex == 0) {
+            [self 取消];
+        }else{
+        
+            [self 继续];
+        }
+    };
+    
+    objc_setAssociatedObject(alert, AssociationKey, block, OBJC_ASSOCIATION_COPY);
+}
+- (void)取消{}
+- (void)继续{}
+
+- alertView(UIAlertView*)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+
+    void (^block)(NSInteger) = objc_getAssociatedObject(alertView, AssociationKey);
+    block(buttonIndex);
+}
+```
+
+要点：
+1. 通过关联对象机制把两个对象连起来
+2. 定义关联对象时壳置顶内存管理语义，用以模仿定义属性时所采用的‘拥有关系’和‘非用有关系’
+3. 只有在其他做法不可行时才应选用关联对象，因为这种做法通常会难以查找 bug
+
+ ##11. 理解 objc_msgSend的作用
+ ##12. 理解消息转发机制
+ 
+  
+
+
