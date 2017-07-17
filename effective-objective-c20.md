@@ -203,4 +203,22 @@ for (int i=0;i<10000;i++){
 ##35. 用僵尸对象调试内存管理问题
 ##36. 不要使用 retainCount
 ##37. 理解‘block’ 这一概念
-1. block 类似于
+1. block 类似于匿名函数 return_type funName param ==》返回类型 函数名 参数
+##38. 为常用块类型创建 typedef
+##39. 用 handle 块降低代码分散程度
+说白了就是把 block 当做参数进行传递，类似于闭包
+##40. 使用 block时避免出现循环引用
+##41. 多用派发队列 GCD， 少用同步锁
+##42. 多用 GCD，少用 performselector
+##43. 掌握 GCD 及其操作队列的使用时机
+##44. 通过 dispatch group 机制，根据系统资源状况来执行任务
+##45. 使用 dispatch_once 来执行只需要运行一次的线程安全代码
+##46. 不要使用 dispatch_get_current_queue
+##47. 熟悉系统框架
+##48. 多用块枚举，少用 for 循环
+##49. 对自定义其内存管理语义的 collection 使用无缝桥接
+##50. 构建缓存时徐阿农 nscache 而非nsdictionary
+##51. 精简 initialize 和 load 的实现代码
+##52. b别忘了 nstimer 会保留其目标对象
+1. 反复执行任务的计时器很容易引入保留环，如果这种计时器的目标又保留了计时器本身，那么肯定导致循环引用
+2. 
